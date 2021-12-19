@@ -9,10 +9,10 @@ LDIR = lib
 
 LIBS = 
 
-_DEPS = 
+_DEPS = dasm.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o
+_OBJ = main.o dasm.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(IDIR)/%.c $(DEPS)
