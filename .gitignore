@@ -1,3 +1,5 @@
 main
 games/
 obj/
+.cache
+compile_commands.json
