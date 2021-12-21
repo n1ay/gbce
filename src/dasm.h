@@ -15,6 +15,7 @@
 #define B2_MOV byte_index += 2
 
 void hexdump(int fd);
-void disassembly(int fd);
+void dasm(int fd);
+void dasm_prefix_0xCB(uint8_t* buffer, ssize_t* byte_index);
 
 #endif

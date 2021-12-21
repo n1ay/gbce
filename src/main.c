@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
         exit(EXIT_FILE_OPEN_ERROR);
     }
 
-    disassembly(fd);
+    dasm(fd);
 
     close(fd);
     return 0;
