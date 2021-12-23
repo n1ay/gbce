@@ -52,7 +52,7 @@ void dasm(int fd) {
 
     ssize_t byte_index = 0;
     while (byte_index < read_bytes) {
-        printf("%6lx | ", byte_index);
+        printf("%06lx | ", byte_index);
         switch(buffer[byte_index]) {
             // 0x00 - 0x0f
             case 0x00: printf("NOP\n"); break;
