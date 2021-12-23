@@ -354,6 +354,315 @@ void dasm(int fd) {
 
 }
 
-void dasm_prefix_0xCB(uint8_t* buffer, ssize_t* byte_index) {
-    printf("CB prefix\n");
+void dasm_prefix_0xCB(uint8_t* buffer, ssize_t* byte_index_ptr) {
+    // byte_index_ptr is still pointing at 0xCB prefix in buffer,
+    // we need to move it to the next byte.
+    // All 0xCB prefix commands are two byte commands,
+    // thus there will be one byte remaining here.
+    ++(*byte_index_ptr);
+    switch(buffer[*byte_index_ptr]) {
+        //0x00 - 0x0f
+        case 0x00: printf("RLC B\n"); break;
+        case 0x01: printf("RLC C\n"); break;
+        case 0x02: printf("RLC D\n"); break;
+        case 0x03: printf("RLC E\n"); break;
+        case 0x04: printf("RLC H\n"); break;
+        case 0x05: printf("RLC L\n"); break;
+        case 0x06: printf("RLC HL\n"); break;
+        case 0x07: printf("RLC A\n"); break;
+
+        case 0x08: printf("RRC B\n"); break;
+        case 0x09: printf("RRC C\n"); break;
+        case 0x0a: printf("RRC D\n"); break;
+        case 0x0b: printf("RRC E\n"); break;
+        case 0x0c: printf("RRC H\n"); break;
+        case 0x0d: printf("RRC L\n"); break;
+        case 0x0e: printf("RRC HL\n"); break;
+        case 0x0f: printf("RRC A\n"); break;
+
+        //0x10 - 0x1f
+        case 0x10: printf("RL B\n"); break;
+        case 0x11: printf("RL C\n"); break;
+        case 0x12: printf("RL D\n"); break;
+        case 0x13: printf("RL E\n"); break;
+        case 0x14: printf("RL H\n"); break;
+        case 0x15: printf("RL L\n"); break;
+        case 0x16: printf("RL HL\n"); break;
+        case 0x17: printf("RL A\n"); break;
+
+        case 0x18: printf("RR B\n"); break;
+        case 0x19: printf("RR C\n"); break;
+        case 0x1a: printf("RR D\n"); break;
+        case 0x1b: printf("RR E\n"); break;
+        case 0x1c: printf("RR H\n"); break;
+        case 0x1d: printf("RR L\n"); break;
+        case 0x1e: printf("RR HL\n"); break;
+        case 0x1f: printf("RR A\n"); break;
+
+        //0x20 - 0x2f
+        case 0x20: printf("SLA B\n"); break;
+        case 0x21: printf("SLA C\n"); break;
+        case 0x22: printf("SLA D\n"); break;
+        case 0x23: printf("SLA E\n"); break;
+        case 0x24: printf("SLA H\n"); break;
+        case 0x25: printf("SLA L\n"); break;
+        case 0x26: printf("SLA HL\n"); break;
+        case 0x27: printf("SLA A\n"); break;
+
+        case 0x28: printf("SRA B\n"); break;
+        case 0x29: printf("SRA C\n"); break;
+        case 0x2a: printf("SRA D\n"); break;
+        case 0x2b: printf("SRA E\n"); break;
+        case 0x2c: printf("SRA H\n"); break;
+        case 0x2d: printf("SRA L\n"); break;
+        case 0x2e: printf("SRA HL\n"); break;
+        case 0x2f: printf("SRA A\n"); break;
+
+        //0x30 - 0x3f
+        case 0x30: printf("SWAP B\n"); break;
+        case 0x31: printf("SWAP C\n"); break;
+        case 0x32: printf("SWAP D\n"); break;
+        case 0x33: printf("SWAP E\n"); break;
+        case 0x34: printf("SWAP H\n"); break;
+        case 0x35: printf("SWAP L\n"); break;
+        case 0x36: printf("SWAP HL\n"); break;
+        case 0x37: printf("SWAP A\n"); break;
+
+        case 0x38: printf("SRL B\n"); break;
+        case 0x39: printf("SRL C\n"); break;
+        case 0x3a: printf("SRL D\n"); break;
+        case 0x3b: printf("SRL E\n"); break;
+        case 0x3c: printf("SRL H\n"); break;
+        case 0x3d: printf("SRL L\n"); break;
+        case 0x3e: printf("SRL HL\n"); break;
+        case 0x3f: printf("SRL A\n"); break;
+
+        //0x40 - 0x4f
+        case 0x40: printf("BIT 0,B\n"); break;
+        case 0x41: printf("BIT 0,C\n"); break;
+        case 0x42: printf("BIT 0,D\n"); break;
+        case 0x43: printf("BIT 0,E\n"); break;
+        case 0x44: printf("BIT 0,H\n"); break;
+        case 0x45: printf("BIT 0,L\n"); break;
+        case 0x46: printf("BIT 0,HL\n"); break;
+        case 0x47: printf("BIT 0,A\n"); break;
+
+        case 0x48: printf("BIT 1,B\n"); break;
+        case 0x49: printf("BIT 1,C\n"); break;
+        case 0x4a: printf("BIT 1,D\n"); break;
+        case 0x4b: printf("BIT 1,E\n"); break;
+        case 0x4c: printf("BIT 1,H\n"); break;
+        case 0x4d: printf("BIT 1,L\n"); break;
+        case 0x4e: printf("BIT 1,HL\n"); break;
+        case 0x4f: printf("BIT 1,A\n"); break;
+
+        //0x50 - 0x5f
+        case 0x50: printf("BIT 2,B\n"); break;
+        case 0x51: printf("BIT 2,C\n"); break;
+        case 0x52: printf("BIT 2,D\n"); break;
+        case 0x53: printf("BIT 2,E\n"); break;
+        case 0x54: printf("BIT 2,H\n"); break;
+        case 0x55: printf("BIT 2,L\n"); break;
+        case 0x56: printf("BIT 2,HL\n"); break;
+        case 0x57: printf("BIT 2,A\n"); break;
+
+        case 0x58: printf("BIT 3,B\n"); break;
+        case 0x59: printf("BIT 3,C\n"); break;
+        case 0x5a: printf("BIT 3,D\n"); break;
+        case 0x5b: printf("BIT 3,E\n"); break;
+        case 0x5c: printf("BIT 3,H\n"); break;
+        case 0x5d: printf("BIT 3,L\n"); break;
+        case 0x5e: printf("BIT 3,HL\n"); break;
+        case 0x5f: printf("BIT 3,A\n"); break;
+
+        //0x60 - 0x6f
+        case 0x60: printf("BIT 4,B\n"); break;
+        case 0x61: printf("BIT 4,C\n"); break;
+        case 0x62: printf("BIT 4,D\n"); break;
+        case 0x63: printf("BIT 4,E\n"); break;
+        case 0x64: printf("BIT 4,H\n"); break;
+        case 0x65: printf("BIT 4,L\n"); break;
+        case 0x66: printf("BIT 4,HL\n"); break;
+        case 0x67: printf("BIT 4,A\n"); break;
+
+        case 0x68: printf("BIT 5,B\n"); break;
+        case 0x69: printf("BIT 5,C\n"); break;
+        case 0x6a: printf("BIT 5,D\n"); break;
+        case 0x6b: printf("BIT 5,E\n"); break;
+        case 0x6c: printf("BIT 5,H\n"); break;
+        case 0x6d: printf("BIT 5,L\n"); break;
+        case 0x6e: printf("BIT 5,HL\n"); break;
+        case 0x6f: printf("BIT 5,A\n"); break;
+
+        //0x70 - 0x7f
+        case 0x70: printf("BIT 6,B\n"); break;
+        case 0x71: printf("BIT 6,C\n"); break;
+        case 0x72: printf("BIT 6,D\n"); break;
+        case 0x73: printf("BIT 6,E\n"); break;
+        case 0x74: printf("BIT 6,H\n"); break;
+        case 0x75: printf("BIT 6,L\n"); break;
+        case 0x76: printf("BIT 6,HL\n"); break;
+        case 0x77: printf("BIT 6,A\n"); break;
+
+        case 0x78: printf("BIT 7,B\n"); break;
+        case 0x79: printf("BIT 7,C\n"); break;
+        case 0x7a: printf("BIT 7,D\n"); break;
+        case 0x7b: printf("BIT 7,E\n"); break;
+        case 0x7c: printf("BIT 7,H\n"); break;
+        case 0x7d: printf("BIT 7,L\n"); break;
+        case 0x7e: printf("BIT 7,HL\n"); break;
+        case 0x7f: printf("BIT 7,A\n"); break;
+
+        //0x80 - 0x8f
+        case 0x80: printf("RES 0,B\n"); break;
+        case 0x81: printf("RES 0,C\n"); break;
+        case 0x82: printf("RES 0,D\n"); break;
+        case 0x83: printf("RES 0,E\n"); break;
+        case 0x84: printf("RES 0,H\n"); break;
+        case 0x85: printf("RES 0,L\n"); break;
+        case 0x86: printf("RES 0,HL\n"); break;
+        case 0x87: printf("RES 0,A\n"); break;
+
+        case 0x88: printf("RES 1,B\n"); break;
+        case 0x89: printf("RES 1,C\n"); break;
+        case 0x8a: printf("RES 1,D\n"); break;
+        case 0x8b: printf("RES 1,E\n"); break;
+        case 0x8c: printf("RES 1,H\n"); break;
+        case 0x8d: printf("RES 1,L\n"); break;
+        case 0x8e: printf("RES 1,HL\n"); break;
+        case 0x8f: printf("RES 1,A\n"); break;
+
+        //0x90 - 0x9f
+        case 0x90: printf("RES 2,B\n"); break;
+        case 0x91: printf("RES 2,C\n"); break;
+        case 0x92: printf("RES 2,D\n"); break;
+        case 0x93: printf("RES 2,E\n"); break;
+        case 0x94: printf("RES 2,H\n"); break;
+        case 0x95: printf("RES 2,L\n"); break;
+        case 0x96: printf("RES 2,HL\n"); break;
+        case 0x97: printf("RES 2,A\n"); break;
+
+        case 0x98: printf("RES 3,B\n"); break;
+        case 0x99: printf("RES 3,C\n"); break;
+        case 0x9a: printf("RES 3,D\n"); break;
+        case 0x9b: printf("RES 3,E\n"); break;
+        case 0x9c: printf("RES 3,H\n"); break;
+        case 0x9d: printf("RES 3,L\n"); break;
+        case 0x9e: printf("RES 3,HL\n"); break;
+        case 0x9f: printf("RES 3,A\n"); break;
+
+        //0xa0 - 0xaf
+        case 0xa0: printf("RES 4,B\n"); break;
+        case 0xa1: printf("RES 4,C\n"); break;
+        case 0xa2: printf("RES 4,D\n"); break;
+        case 0xa3: printf("RES 4,E\n"); break;
+        case 0xa4: printf("RES 4,H\n"); break;
+        case 0xa5: printf("RES 4,L\n"); break;
+        case 0xa6: printf("RES 4,HL\n"); break;
+        case 0xa7: printf("RES 4,A\n"); break;
+
+        case 0xa8: printf("RES 5,B\n"); break;
+        case 0xa9: printf("RES 5,C\n"); break;
+        case 0xaa: printf("RES 5,D\n"); break;
+        case 0xab: printf("RES 5,E\n"); break;
+        case 0xac: printf("RES 5,H\n"); break;
+        case 0xad: printf("RES 5,L\n"); break;
+        case 0xae: printf("RES 5,HL\n"); break;
+        case 0xaf: printf("RES 5,A\n"); break;
+
+        //0xb0 - 0xbf
+        case 0xb0: printf("RES 6,B\n"); break;
+        case 0xb1: printf("RES 6,C\n"); break;
+        case 0xb2: printf("RES 6,D\n"); break;
+        case 0xb3: printf("RES 6,E\n"); break;
+        case 0xb4: printf("RES 6,H\n"); break;
+        case 0xb5: printf("RES 6,L\n"); break;
+        case 0xb6: printf("RES 6,HL\n"); break;
+        case 0xb7: printf("RES 6,A\n"); break;
+
+        case 0xb8: printf("RES 7,B\n"); break;
+        case 0xb9: printf("RES 7,C\n"); break;
+        case 0xba: printf("RES 7,D\n"); break;
+        case 0xbb: printf("RES 7,E\n"); break;
+        case 0xbc: printf("RES 7,H\n"); break;
+        case 0xbd: printf("RES 7,L\n"); break;
+        case 0xbe: printf("RES 7,HL\n"); break;
+        case 0xbf: printf("RES 7,A\n"); break;
+
+        //0xc0 - 0xcf
+        case 0xc0: printf("SET 0,B\n"); break;
+        case 0xc1: printf("SET 0,C\n"); break;
+        case 0xc2: printf("SET 0,D\n"); break;
+        case 0xc3: printf("SET 0,E\n"); break;
+        case 0xc4: printf("SET 0,H\n"); break;
+        case 0xc5: printf("SET 0,L\n"); break;
+        case 0xc6: printf("SET 0,HL\n"); break;
+        case 0xc7: printf("SET 0,A\n"); break;
+
+        case 0xc8: printf("SET 1,B\n"); break;
+        case 0xc9: printf("SET 1,C\n"); break;
+        case 0xca: printf("SET 1,D\n"); break;
+        case 0xcb: printf("SET 1,E\n"); break;
+        case 0xcc: printf("SET 1,H\n"); break;
+        case 0xcd: printf("SET 1,L\n"); break;
+        case 0xce: printf("SET 1,HL\n"); break;
+        case 0xcf: printf("SET 1,A\n"); break;
+
+        //0xd0 - 0xdf
+        case 0xd0: printf("SET 2,B\n"); break;
+        case 0xd1: printf("SET 2,C\n"); break;
+        case 0xd2: printf("SET 2,D\n"); break;
+        case 0xd3: printf("SET 2,E\n"); break;
+        case 0xd4: printf("SET 2,H\n"); break;
+        case 0xd5: printf("SET 2,L\n"); break;
+        case 0xd6: printf("SET 2,HL\n"); break;
+        case 0xd7: printf("SET 2,A\n"); break;
+
+        case 0xd8: printf("SET 3,B\n"); break;
+        case 0xd9: printf("SET 3,C\n"); break;
+        case 0xda: printf("SET 3,D\n"); break;
+        case 0xdb: printf("SET 3,E\n"); break;
+        case 0xdc: printf("SET 3,H\n"); break;
+        case 0xdd: printf("SET 3,L\n"); break;
+        case 0xde: printf("SET 3,HL\n"); break;
+        case 0xdf: printf("SET 3,A\n"); break;
+
+        //0xe0 - 0xef
+        case 0xe0: printf("SET 4,B\n"); break;
+        case 0xe1: printf("SET 4,C\n"); break;
+        case 0xe2: printf("SET 4,D\n"); break;
+        case 0xe3: printf("SET 4,E\n"); break;
+        case 0xe4: printf("SET 4,H\n"); break;
+        case 0xe5: printf("SET 4,L\n"); break;
+        case 0xe6: printf("SET 4,HL\n"); break;
+        case 0xe7: printf("SET 4,A\n"); break;
+
+        case 0xe8: printf("SET 5,B\n"); break;
+        case 0xe9: printf("SET 5,C\n"); break;
+        case 0xea: printf("SET 5,D\n"); break;
+        case 0xeb: printf("SET 5,E\n"); break;
+        case 0xec: printf("SET 5,H\n"); break;
+        case 0xed: printf("SET 5,L\n"); break;
+        case 0xee: printf("SET 5,HL\n"); break;
+        case 0xef: printf("SET 5,A\n"); break;
+
+        //0xf0 - 0xff
+        case 0xf0: printf("SET 6,B\n"); break;
+        case 0xf1: printf("SET 6,C\n"); break;
+        case 0xf2: printf("SET 6,D\n"); break;
+        case 0xf3: printf("SET 6,E\n"); break;
+        case 0xf4: printf("SET 6,H\n"); break;
+        case 0xf5: printf("SET 6,L\n"); break;
+        case 0xf6: printf("SET 6,HL\n"); break;
+        case 0xf7: printf("SET 6,A\n"); break;
+
+        case 0xf8: printf("SET 7,B\n"); break;
+        case 0xf9: printf("SET 7,C\n"); break;
+        case 0xfa: printf("SET 7,D\n"); break;
+        case 0xfb: printf("SET 7,E\n"); break;
+        case 0xfc: printf("SET 7,H\n"); break;
+        case 0xfd: printf("SET 7,L\n"); break;
+        case 0xfe: printf("SET 7,HL\n"); break;
+        case 0xff: printf("SET 7,A\n"); break;
+    }
 }
