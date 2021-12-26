@@ -29,3 +29,12 @@ void set_bit(uint8_t* byte_ptr, Bit bit) {
 void zero_bit(uint8_t* byte_ptr, Bit bit) {
     (*byte_ptr) &= (~bit);
 }
+
+uint16_t ptr_offset(uint8_t* greater_ptr, uint16_t lesser_ptr) {
+    return (long) greater_ptr - lesser_ptr;
+}
+
+uint8_t ptr_in(uint8_t* ptr, uint16_t low_addr, uint16_t high_addr) {
+    long ptr_long = (long) ptr;
+    return (ptr_long >= low_addr) && (ptr_long <= high_addr);
+}

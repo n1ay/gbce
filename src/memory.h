@@ -1,7 +1,20 @@
 #ifndef _MEMORY_H_
 #define _MEMORY_H_
 
+#include <stdio.h>
 #include <stdint.h>
+
+#include "byte.h"
+
+#define VRAM_BEGIN 0x8000
+#define VRAM_END 0xBFFF
+#define WRAM_BEGIN 0xC000
+#define WRAM_END 0xDFFF
+#define OAM_BEGIN 0xFE00
+#define OAM_END 0xFE9F
+#define HRAM_BEGIN 0xFF00
+#define HRAM_END 0xFFFF
+
 typedef struct Memory {
 
     uint8_t* vram;
@@ -79,5 +92,7 @@ typedef enum MemoryRegister {
 
     IE = 0xff
 } MemoryRegister;
+
+uint8_t* access_memory(Memory memory, uint8_t* address);
 
 #endif
