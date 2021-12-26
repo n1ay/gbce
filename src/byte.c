@@ -21,3 +21,11 @@ uint8_t high_byte(uint16_t twobytes) {
 uint8_t get_bit(uint8_t byte, Bit bit) {
     return (byte & bit) != 0;
 }
+
+void set_bit(uint8_t* byte_ptr, Bit bit) {
+    (*byte_ptr) |= bit;
+}
+
+void zero_bit(uint8_t* byte_ptr, Bit bit) {
+    (*byte_ptr) &= (~bit);
+}
