@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "byte.h"
+
 typedef struct Cpu {
     uint8_t A;
     uint8_t F;
@@ -16,6 +18,15 @@ typedef struct Cpu {
     uint16_t SP;
 } Cpu;
 
+typedef enum Flag {
+    Z = BIT7,
+    N = BIT6,
+    H = BIT5,
+    C = BIT4
+} Flag;
+
 void init_cpu(Cpu* cpu_ptr);
+
+uint8_t get_flag(const Cpu cpu, Flag flag);
 
 #endif

@@ -12,3 +12,7 @@ void init_cpu(Cpu* cpu_ptr) {
     cpu_ptr -> PC = 0x0100;
     cpu_ptr -> SP = 0xfffe;
 }
+
+uint8_t get_flag(const Cpu cpu, Flag flag) {
+    return get_bit(cpu.F, (Bit) flag);
+}
