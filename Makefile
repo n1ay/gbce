@@ -9,10 +9,10 @@ LDIR = lib
 
 LIBS = 
 
-_DEPS = dasm.h
+_DEPS = dasm.h cpu.h byte.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o dasm.o
+_OBJ = main.o dasm.o cpu.o byte.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(IDIR)/%.c $(DEPS)
