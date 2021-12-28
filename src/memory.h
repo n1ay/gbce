@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "byte.h"
 
@@ -91,6 +93,7 @@ typedef enum MemoryRegister {
     MREG_IE = 0xff
 } MemoryRegister;
 
+void init_memory(Memory* memory);
 uint8_t* access_memory(Memory memory, uint8_t* address);
 
 #endif
