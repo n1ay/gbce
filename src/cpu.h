@@ -18,15 +18,15 @@ typedef struct Cpu {
     uint16_t SP;
 } Cpu;
 
-typedef enum Flag {
-    Z = BIT7,
-    N = BIT6,
-    H = BIT5,
-    C = BIT4
-} Flag;
+typedef enum CpuFlag {
+    FLAG_Z = BIT7,
+    FLAG_N = BIT6,
+    FLAG_H = BIT5,
+    FLAG_C = BIT4
+} CpuFlag;
 
 void init_cpu(Cpu* cpu_ptr);
 
-uint8_t get_flag(const Cpu cpu, Flag flag);
+uint8_t get_flag(const Cpu cpu, CpuFlag flag);
 
 #endif
