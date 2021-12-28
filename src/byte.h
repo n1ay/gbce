@@ -18,6 +18,7 @@ uint8_t low_nibble(uint8_t byte);
 uint8_t high_nibble(uint8_t byte);
 uint8_t low_byte(uint16_t twobytes);
 uint8_t high_byte(uint16_t twobytes);
+uint16_t merge_bytes(uint8_t low, uint8_t high);
 uint8_t get_bit(uint8_t byte, Bit bit);
 void set_bit(uint8_t* byte_ptr, Bit bit);
 void zero_bit(uint8_t* byte_ptr, Bit bit);

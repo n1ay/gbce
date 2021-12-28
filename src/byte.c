@@ -18,6 +18,10 @@ uint8_t high_byte(uint16_t twobytes) {
     return (* (byte_ptr + 1));
 }
 
+uint16_t merge_bytes(uint8_t high, uint8_t low) {
+    return (high << 8) + low;
+}
+
 uint8_t get_bit(uint8_t byte, Bit bit) {
     return (byte & bit) != 0;
 }
