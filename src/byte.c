@@ -9,13 +9,11 @@ uint8_t high_nibble(uint8_t byte) {
 }
 
 uint8_t low_byte(uint16_t twobytes) {
-    uint8_t* byte_ptr = (uint8_t*) &twobytes;
-    return (* byte_ptr);
+    return twobytes & 0x00ff;
 }
 
 uint8_t high_byte(uint16_t twobytes) {
-    uint8_t* byte_ptr = (uint8_t*) &twobytes;
-    return (* (byte_ptr + 1));
+    return (twobytes & 0xff00) >> 8;
 }
 
 uint16_t merge_bytes(uint8_t high, uint8_t low) {
