@@ -22,6 +22,6 @@ uint16_t merge_bytes(uint8_t low, uint8_t high);
 uint8_t get_bit(uint8_t byte, Bit bit);
 void set_bit(uint8_t* byte_ptr, Bit bit);
 void zero_bit(uint8_t* byte_ptr, Bit bit);
-uint16_t ptr_offset(uint8_t* greater_ptr, uint16_t lesser_ptr);
-uint8_t ptr_in(uint8_t* ptr, uint16_t low_addr, uint16_t high_addr);
+uint16_t ptr_offset(uint16_t greater_ptr, uint16_t lesser_ptr);
+uint8_t ptr_in(uint16_t ptr, uint16_t low_addr, uint16_t high_addr);
 #endif

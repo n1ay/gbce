@@ -94,6 +94,6 @@ typedef enum MemoryRegister {
 } MemoryRegister;
 
 void init_memory(Memory* memory);
-uint8_t* access_memory(Memory memory, uint8_t* address);
+uint8_t* access_memory(Memory memory, uint16_t address);
 
 #endif
