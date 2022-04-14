@@ -16,3 +16,11 @@ void init_cpu(Cpu* cpu_ptr) {
 uint8_t get_flag(const Cpu cpu, CpuFlag flag) {
     return get_bit(cpu.F, (Bit) flag);
 }
+
+void set_flag(Cpu* cpu_ptr, CpuFlag flag) {
+    set_bit(&(cpu_ptr->F), (Bit) flag);
+}
+
+void unset_flag(Cpu* cpu_ptr, CpuFlag flag) {
+    unset_bit(&(cpu_ptr->F), (Bit) flag);
+}

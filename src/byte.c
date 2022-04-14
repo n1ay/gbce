@@ -21,14 +21,14 @@ uint16_t merge_bytes(uint8_t high, uint8_t low) {
 }
 
 uint8_t get_bit(uint8_t byte, Bit bit) {
-    return (byte & bit) != 0;
+    return (byte & bit);
 }
 
 void set_bit(uint8_t* byte_ptr, Bit bit) {
     (*byte_ptr) |= bit;
 }
 
-void zero_bit(uint8_t* byte_ptr, Bit bit) {
+void unset_bit(uint8_t* byte_ptr, Bit bit) {
     (*byte_ptr) &= (~bit);
 }
 

@@ -52,5 +52,7 @@ typedef enum CpuFlag {
 void init_cpu(Cpu* cpu_ptr);
 
 uint8_t get_flag(const Cpu cpu, CpuFlag flag);
+void set_flag(Cpu* cpu_ptr, CpuFlag flag);
+void unset_flag(Cpu* cpu_ptr, CpuFlag flag);
 
 #endif
