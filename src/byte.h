@@ -24,4 +24,6 @@ void set_bit(uint8_t* byte_ptr, Bit bit);
 void unset_bit(uint8_t* byte_ptr, Bit bit);
 uint16_t ptr_offset(uint16_t greater_ptr, uint16_t lesser_ptr);
 uint8_t ptr_in(uint16_t ptr, uint16_t low_addr, uint16_t high_addr);
+uint8_t get_bit_number(Bit bit);
+uint8_t add_get_carry_bit(uint8_t byte1, uint8_t byte2, Bit bit);
 #endif
