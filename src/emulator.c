@@ -28,26 +28,11 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0x04: //INC B
-            unset_flag(&emulator->cpu, FLAG_N);
-            if (add_get_carry_bit(emulator->cpu.B, 0x01, BIT3)) {
-                set_flag(&emulator->cpu, FLAG_H);
-            }
-            ++emulator->cpu.B;
-            if (!emulator->cpu.B) {
-                set_flag(&emulator->cpu, FLAG_Z);
-            }
-
+            cmd_8bit_inc(emulator, &emulator->cpu.B);
             break;
 
         case 0x05: //DEC B
-            set_flag(&emulator->cpu, FLAG_N);
-            if (!subtract_get_borrow_bit(emulator->cpu.B, 0x01, BIT3)) {
-                set_flag(&emulator->cpu, FLAG_H);
-            }
-            --emulator->cpu.B;
-            if(!emulator->cpu.B) {
-                set_flag(&emulator->cpu, FLAG_Z);
-            }
+            cmd_8bit_dec(emulator, &emulator->cpu.B);
             break;
 
         case 0x06: //LD B,n
@@ -65,14 +50,7 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0x09: //ADD HL,BC
-            unset_flag(&emulator->cpu, FLAG_N);
-            if (add_get_carry_bit(emulator->cpu.HL, emulator->cpu.BC, BIT11)) {
-                set_flag(&emulator->cpu, FLAG_H);
-            }
-            if (add_get_carry_bit(emulator->cpu.HL, emulator->cpu.BC, BIT15)) {
-                set_flag(&emulator->cpu, FLAG_C);
-            }
-            emulator->cpu.HL += emulator->cpu.BC;
+            cmd_16bit_reg_add(emulator, &emulator->cpu.HL, emulator->cpu.BC);
             break;
 
         case 0x0a: //LD A,(BC)
@@ -84,28 +62,12 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0x0c: //INC C
-            unset_flag(&emulator->cpu, FLAG_N);
-            if (add_get_carry_bit(emulator->cpu.C, 0x01, BIT3)) {
-                set_flag(&emulator->cpu, FLAG_H);
-            }
-            ++emulator->cpu.C;
-            if (!emulator->cpu.C) {
-                set_flag(&emulator->cpu, FLAG_Z);
-            }
-
+            cmd_8bit_inc(emulator, &emulator->cpu.C);
             break;
 
         case 0x0d: //DEC C
-            set_flag(&emulator->cpu, FLAG_N);
-            if (!subtract_get_borrow_bit(emulator->cpu.C, 0x01, BIT3)) {
-                set_flag(&emulator->cpu, FLAG_H);
-            }
-            --emulator->cpu.C;
-            if(!emulator->cpu.C) {
-                set_flag(&emulator->cpu, FLAG_Z);
-            }
+            cmd_8bit_dec(emulator, &emulator->cpu.C);
             break;
-
 
         case 0x0e: //LD C,n
             emulator->cpu.C = byte1;
@@ -120,14 +82,69 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             MOV_PC;
             break;
 
+        case 0x11: //LD DE,nn
+            emulator->cpu.DE = merge_bytes(byte1, byte2);
+            MOV_PC2;
+            break;
+
+        case 0x12: //LD (DE),A
+            (*access_memory(emulator->memory, emulator->cpu.DE)) = emulator->cpu.A;
+            break;
+
+        case 0x13: //INC DE
+            ++emulator->cpu.DE;
+            break;
+
+        case 0x14: //INC D
+            cmd_8bit_inc(emulator, &emulator->cpu.D);
+            break;
+
+        case 0x15: //DEC D
+            cmd_8bit_dec(emulator, &emulator->cpu.D);
+            break;
+
         case 0x16: //LD D,n
             emulator->cpu.D = byte1;
             MOV_PC;
             break;
 
+        case 0x17: //RLA
+            //TODO
+            break;
+
+        case 0x18: //JR n
+            MOV_PC;
+            emulator->cpu.PC += byte1;
+            is_jump = 1;
+            break;
+
+        case 0x19: //ADD HL,DE
+            cmd_16bit_reg_add(emulator, &emulator->cpu.HL, emulator->cpu.DE);
+            break;
+
+        case 0x1a: //LD A,(DE)
+            emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.DE));
+            break;
+
+        case 0x1b: //DEC DE
+            --emulator->cpu.DE;
+            break;
+
+        case 0x1c: //INC E
+            cmd_8bit_inc(emulator, &emulator->cpu.E);
+            break;
+
+        case 0x1d: //DEC E
+            cmd_8bit_dec(emulator, &emulator->cpu.E);
+            break;
+
         case 0x1e: //LD E,n
             emulator->cpu.E = byte1;
             MOV_PC;
+            break;
+
+        case 0x1f: //RRA
+            //TODO
             break;
 
         case 0x26: //LD H,n
@@ -170,11 +187,6 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
 
         case 0x7e: //LD A,(HL)
             emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.HL));
-            break;
-
-
-        case 0x1a: //LD A,(DE)
-            emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.DE));
             break;
 
         case 0xfa: //LD A,(nn)
@@ -394,4 +406,37 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
     } else {
         MOV_PC;
     }
+}
+
+void cmd_8bit_inc(Emulator* emulator, uint8_t* register_ptr) {
+    unset_flag(&emulator->cpu, FLAG_N);
+    if (add_get_carry_bit(*register_ptr, 0x01, BIT3)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    ++(*register_ptr);
+    if (!(*register_ptr)) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+}
+
+void cmd_8bit_dec(Emulator* emulator, uint8_t* register_ptr) {
+    set_flag(&emulator->cpu, FLAG_N);
+    if (!subtract_get_borrow_bit(*register_ptr, 0x01, BIT3)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    --(*register_ptr);
+    if(!(*register_ptr)) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+}
+
+void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t add_value) {
+    unset_flag(&emulator->cpu, FLAG_N);
+    if (add_get_carry_bit(*target_ptr, add_value, BIT11)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    if (add_get_carry_bit(*target_ptr, add_value, BIT15)) {
+        set_flag(&emulator->cpu, FLAG_C);
+    }
+    (*target_ptr) += add_value;
 }
