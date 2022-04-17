@@ -22,6 +22,10 @@ main: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
+.PHONY: format
 
 clean:
 	rm -rf $(ODIR)/*.o *~ $(IDIR)/*~
+
+format:
+	$(shell sed -i 's/\s*$$//g' src/*)
