@@ -147,14 +147,158 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             //TODO
             break;
 
+        case 0x20: //JR NZ,n
+            MOV_PC;
+            if (!get_flag(emulator->cpu, FLAG_Z)) {
+                emulator->cpu.PC += byte1;
+                is_jump = 1;
+            }
+            break;
+
+        case 0x21: //LD HL,nn
+            emulator->cpu.HL = merge_bytes(byte1, byte2);
+            MOV_PC2;
+            break;
+
+        case 0x22: // LD (HL+),A
+            *(access_memory(emulator->memory, emulator->cpu.HL)) = emulator->cpu.A;
+            ++emulator->cpu.HL;
+            break;
+
+        case 0x23: //INC HL
+            ++emulator->cpu.HL;
+            break;
+
+        case 0x24: //INC H
+            cmd_8bit_inc(emulator, &emulator->cpu.H);
+            break;
+
+        case 0x25: //DEC H
+            cmd_8bit_dec(emulator, &emulator->cpu.H);
+            break;
+
         case 0x26: //LD H,n
             emulator->cpu.H = byte1;
             MOV_PC;
             break;
 
+        case 0x27: //DAA
+            //TODO
+            break;
+
+        case 0x28: //JR Z,n
+            MOV_PC;
+            if (get_flag(emulator->cpu, FLAG_Z)) {
+                emulator->cpu.PC += byte1;
+                is_jump = 1;
+            }
+            break;
+
+        case 0x29: //ADD HL,HL
+            cmd_16bit_reg_add(emulator, &emulator->cpu.HL, emulator->cpu.HL);
+            break;
+
+        case 0x2a: //LD A,(HL+)
+            emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.HL));
+            ++emulator->cpu.HL;
+            break;
+
+        case 0x2b: //DEC HL
+            --emulator->cpu.HL;
+            break;
+
+        case 0x2c: //INC L
+            cmd_8bit_inc(emulator, &emulator->cpu.L);
+            break;
+
+        case 0x2d: //DEC L
+            cmd_8bit_dec(emulator, &emulator->cpu.L);
+            break;
+
         case 0x2e: //LD L,n
             emulator->cpu.L = byte1;
             MOV_PC;
+            break;
+
+        case 0x2f: //CPL
+            //TODO
+            break;
+
+        case 0x30: //JR NC,n
+            MOV_PC;
+            if (!get_flag(emulator->cpu, FLAG_C)) {
+                emulator->cpu.PC += byte1;
+                is_jump = 1;
+            }
+            break;
+
+        case 0x31: //LD SP,nn
+            emulator->cpu.SP = merge_bytes(byte1, byte2);
+            MOV_PC2;
+            break;
+
+        case 0x32: // LD (HL-),A
+            *(access_memory(emulator->memory, emulator->cpu.HL)) = emulator->cpu.A;
+            --emulator->cpu.HL;
+            break;
+
+        case 0x33: //INC SP
+            ++emulator->cpu.SP;
+            break;
+
+        case 0x34: //INC (HL)
+            cmd_8bit_inc(emulator, access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0x35: //DEC (HL)
+            cmd_8bit_dec(emulator, access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0x36: //LD (HL),n
+            *(access_memory(emulator->memory, emulator->cpu.HL)) = byte1;
+            MOV_PC;
+            break;
+
+        case 0x37: //SCF
+            //TODO
+            break;
+
+        case 0x38: //JR C,n
+            MOV_PC;
+            if (get_flag(emulator->cpu, FLAG_C)) {
+                emulator->cpu.PC += byte1;
+                is_jump = 1;
+            }
+            break;
+
+        case 0x39: //ADD HL,SP
+            cmd_16bit_reg_add(emulator, &emulator->cpu.HL, emulator->cpu.SP);
+            break;
+
+        case 0x3a: //LD A,(HL-)
+            emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.HL));
+            --emulator->cpu.HL;
+            break;
+
+        case 0x3b: //DEC SP
+            --emulator->cpu.SP;
+            break;
+
+        case 0x3c: //INC A
+            cmd_8bit_inc(emulator, &emulator->cpu.A);
+            break;
+
+        case 0x3d: //DEC A
+            cmd_8bit_dec(emulator, &emulator->cpu.A);
+            break;
+
+        case 0x3e: //LD A,n
+            emulator->cpu.A = byte1;
+            MOV_PC;
+            break;
+
+        case 0x3f: //CCF
+            //TODO
             break;
 
         case 0x7f: //LD A,A
@@ -194,10 +338,6 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             MOV_PC2;
             break;
 
-        case 0x3e: //LD A,n
-            emulator->cpu.A = byte1;
-            MOV_PC;
-            break;
 
         case 0x40: //LD B,B
             emulator->cpu.B = emulator->cpu.B;
