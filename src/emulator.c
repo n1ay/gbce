@@ -365,7 +365,6 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             emulator->cpu.C = emulator->cpu.A;
             break;
 
-
         case 0x50: //LD D,B
             emulator->cpu.D = emulator->cpu.B;
             break;
@@ -558,6 +557,75 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             emulator->cpu.A = emulator->cpu.A;
             break;
 
+        case 0x80: //ADD A,B
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.B);
+            break;
+
+        case 0x81: //ADD A,C
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.C);
+            break;
+
+        case 0x82: //ADD A,D
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.D);
+            break;
+
+        case 0x83: //ADD A,E
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.E);
+            break;
+
+        case 0x84: //ADD A,H
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.H);
+            break;
+
+        case 0x85: //ADD A,L
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.L);
+            break;
+
+        case 0x86: //ADD A,(HL)
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, *(access_memory(emulator->memory, emulator->cpu.HL)));
+            break;
+
+        case 0x87: //ADD A,A
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.A);
+            break;
+
+        case 0x88: //ADC A,B
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, emulator->cpu.B);
+            break;
+
+        case 0x89: //ADC A,C
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.C);
+            break;
+
+        case 0x8a: //ADC A,D
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.D);
+            break;
+
+        case 0x8b: //ADC A,E
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.E);
+            break;
+
+        case 0x8c: //ADC A,H
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.H);
+            break;
+
+        case 0x8d: //ADC A,L
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.L);
+            break;
+
+        case 0x8e: //ADC A,(HL)
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, *(access_memory(emulator->memory, emulator->cpu.HL)));
+            break;
+
+        case 0x8f: //ADC A,A
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.A);
+            break;
+
+        case 0xc6: //ADD A,n
+            cmd_8bit_reg_add(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
         case 0xfa: //LD A,(nn)
             emulator->cpu.A = *(access_memory(emulator->memory, merge_bytes(byte1, byte2)));
             MOV_PC2;
@@ -597,6 +665,20 @@ void cmd_8bit_dec(Emulator* emulator, uint8_t* register_ptr) {
     }
 }
 
+void cmd_8bit_reg_add(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value) {
+    unset_flag(&emulator->cpu, FLAG_N);
+    if (add_get_carry_bit(*target_ptr, add_value, BIT3)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    if (add_get_carry_bit(*target_ptr, add_value, BIT7)) {
+        set_flag(&emulator->cpu, FLAG_C);
+    }
+    *target_ptr += add_value;
+    if (!(*target_ptr)) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+}
+
 void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t add_value) {
     unset_flag(&emulator->cpu, FLAG_N);
     if (add_get_carry_bit(*target_ptr, add_value, BIT11)) {
@@ -606,4 +688,23 @@ void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t 
         set_flag(&emulator->cpu, FLAG_C);
     }
     (*target_ptr) += add_value;
+}
+
+
+void cmd_8bit_reg_add_carry(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value) {
+    uint8_t carry_bit = get_flag(emulator->cpu, FLAG_C);
+    unset_flag(&emulator->cpu, FLAG_N);
+    if (add_get_carry_bit(*target_ptr, add_value, BIT3)
+            || add_get_carry_bit(*target_ptr + add_value, carry_bit, BIT3)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    if (add_get_carry_bit(*target_ptr, add_value, BIT7)
+            || add_get_carry_bit(*target_ptr + add_value, carry_bit, BIT7)) {
+        set_flag(&emulator->cpu, FLAG_C);
+    }
+    *target_ptr += add_value;
+    *target_ptr += carry_bit;
+    if (!(*target_ptr)) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
 }
