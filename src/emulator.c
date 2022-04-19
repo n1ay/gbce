@@ -301,44 +301,6 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             //TODO
             break;
 
-        case 0x7f: //LD A,A
-            emulator->cpu.A = emulator->cpu.A;
-            break;
-
-        case 0x78: //LD A,B
-            emulator->cpu.A = emulator->cpu.B;
-            break;
-
-        case 0x79: //LD A,C
-            emulator->cpu.A = emulator->cpu.C;
-            break;
-
-        case 0x7a: //LD A,D
-            emulator->cpu.A = emulator->cpu.D;
-            break;
-
-        case 0x7b: //LD A,E
-            emulator->cpu.A = emulator->cpu.E;
-            break;
-
-        case 0x7c: //LD A,H
-            emulator->cpu.A = emulator->cpu.H;
-            break;
-
-        case 0x7d: //LD A,L
-            emulator->cpu.A = emulator->cpu.L;
-            break;
-
-        case 0x7e: //LD A,(HL)
-            emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.HL));
-            break;
-
-        case 0xfa: //LD A,(nn)
-            emulator->cpu.A = *(access_memory(emulator->memory, merge_bytes(byte1, byte2)));
-            MOV_PC2;
-            break;
-
-
         case 0x40: //LD B,B
             emulator->cpu.B = emulator->cpu.B;
             break;
@@ -365,6 +327,10 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
 
         case 0x46: //LD B,(HL)
             emulator->cpu.B = *(access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0x47: //LD B,A
+            emulator->cpu.B = emulator->cpu.A;
             break;
 
         case 0x48: //LD C,B
@@ -395,6 +361,11 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             emulator->cpu.C = *(access_memory(emulator->memory, emulator->cpu.HL));
             break;
 
+        case 0x4f: //LD C,A
+            emulator->cpu.C = emulator->cpu.A;
+            break;
+
+
         case 0x50: //LD D,B
             emulator->cpu.D = emulator->cpu.B;
             break;
@@ -423,6 +394,10 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             emulator->cpu.D = *(access_memory(emulator->memory, emulator->cpu.HL));
             break;
 
+        case 0x57: //LD D,A
+            emulator->cpu.D = emulator->cpu.A;
+            break;
+
         case 0x58: //LD E,B
             emulator->cpu.E = emulator->cpu.B;
             break;
@@ -436,19 +411,23 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0x5b: //LD E,E
-            emulator->cpu.D = emulator->cpu.E;
+            emulator->cpu.E = emulator->cpu.E;
             break;
 
         case 0x5c: //LD E,H
-            emulator->cpu.D = emulator->cpu.H;
+            emulator->cpu.E = emulator->cpu.H;
             break;
 
         case 0x5d: //LD E,L
-            emulator->cpu.D = emulator->cpu.L;
+            emulator->cpu.E = emulator->cpu.L;
             break;
 
         case 0x5e: //LD E,(HL)
             emulator->cpu.E = *(access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0x5f: //LD E,A
+            emulator->cpu.E = emulator->cpu.A;
             break;
 
         case 0x60: //LD H,B
@@ -479,6 +458,10 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             emulator->cpu.H = *(access_memory(emulator->memory, emulator->cpu.HL));
             break;
 
+        case 0x67: //LD H,A
+            emulator->cpu.H = emulator->cpu.A;
+            break;
+
         case 0x68: //LD L,B
             emulator->cpu.L = emulator->cpu.B;
             break;
@@ -507,6 +490,10 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             emulator->cpu.L = *(access_memory(emulator->memory, emulator->cpu.HL));
             break;
 
+        case 0x6f: //LD L,A
+            emulator->cpu.L = emulator->cpu.A;
+            break;
+
         case 0x70: //LD (HL),B
             *(access_memory(emulator->memory, emulator->cpu.HL)) = emulator->cpu.B;
             break;
@@ -531,9 +518,49 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             *(access_memory(emulator->memory, emulator->cpu.HL)) = emulator->cpu.L;
             break;
 
-        case 0x76: //LD (HL),n
-            *(access_memory(emulator->memory, emulator->cpu.HL)) = byte1;
-            MOV_PC;
+        case 0x76: //HALT
+            //TODO
+            break;
+
+        case 0x77: //LD (HL),A
+            *(access_memory(emulator->memory, emulator->cpu.HL)) = emulator->cpu.A;
+            break;
+
+        case 0x78: //LD A,B
+            emulator->cpu.A = emulator->cpu.B;
+            break;
+
+        case 0x79: //LD A,C
+            emulator->cpu.A = emulator->cpu.C;
+            break;
+
+        case 0x7a: //LD A,D
+            emulator->cpu.A = emulator->cpu.D;
+            break;
+
+        case 0x7b: //LD A,E
+            emulator->cpu.A = emulator->cpu.E;
+            break;
+
+        case 0x7c: //LD A,H
+            emulator->cpu.A = emulator->cpu.H;
+            break;
+
+        case 0x7d: //LD A,L
+            emulator->cpu.A = emulator->cpu.L;
+            break;
+
+        case 0x7e: //LD A,(HL)
+            emulator->cpu.A = *(access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0x7f: //LD A,A
+            emulator->cpu.A = emulator->cpu.A;
+            break;
+
+        case 0xfa: //LD A,(nn)
+            emulator->cpu.A = *(access_memory(emulator->memory, merge_bytes(byte1, byte2)));
+            MOV_PC2;
             break;
 
         default:
