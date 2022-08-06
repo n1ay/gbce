@@ -621,6 +621,54 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, emulator->cpu.A);
             break;
 
+        case 0x90: //SUB B
+            break;
+
+        case 0x91: //SUB C
+            break;
+
+        case 0x92: //SUB D
+            break;
+
+        case 0x93: //SUB E
+            break;
+
+        case 0x94: //SUB H
+            break;
+
+        case 0x95: //SUB L
+            break;
+
+        case 0x96: //SUB (HL)
+            break;
+
+        case 0x97: //SUB A
+            break;
+
+        case 0x98: //SBC A,B
+            break;
+
+        case 0x99: //SBC A,C
+            break;
+
+        case 0x9a: //SBC A,D
+            break;
+
+        case 0x9b: //SBC A,E
+            break;
+
+        case 0x9c: //SBC A,H
+            break;
+
+        case 0x9d: //SBC A,L
+            break;
+
+        case 0x9e: //SBC A,(HL)
+            break;
+
+        case 0x9f: //SBC A,A
+            break;
+
         case 0xc6: //ADD A,n
             cmd_8bit_reg_add(emulator, &emulator->cpu.A, byte1);
             MOV_PC;
