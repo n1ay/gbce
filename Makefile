@@ -28,7 +28,7 @@ $(info $(shell mkdir -p $(TESTODIR)))
 
 TESTLIBS = -lcmocka
 
-TEST_OBJ = testbyte.o
+TEST_OBJ = testbyte.o testcpu.o
 TESTOBJ = $(patsubst %,$(TESTODIR)/%,$(TEST_OBJ))
 TESTEXEC = $(patsubst %.o,$(TESTODIR)/%,$(TEST_OBJ))
 
@@ -36,7 +36,7 @@ $(TESTODIR)/%.o: $(TESTIDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # $(wordlist 2,$(words $(OBJ)),$(OBJ)) gets objects without main.o object
-$(TESTEXEC): %: $(TESTOBJ) $(wordlist 2,$(words $(OBJ)),$(OBJ))
+$(TESTEXEC): %: %.o $(wordlist 2,$(words $(OBJ)),$(OBJ))
 	$(CC) -o $@ $^ $(CFLAGS) $(TESTLIBS) $(LIBS)
 
 .PHONY: clean
@@ -53,6 +53,10 @@ format:
 	$(shell sed -i 's/\s*$$//g' $(TESTIDIR)/*)
 
 test_build: $(TESTEXEC)
+define log_and_run =
+	$(info Running test cases from executable $1)
+	$1
+endef
 test_run:
-	$(foreach testfile,$(TESTEXEC),$(testfile);)
+	$(foreach testfile,$(TESTEXEC),$(call log_and_run,$(testfile)))
 test: test_build test_run
