@@ -75,6 +75,52 @@ static void test_set_bit(void** state) {
     }
 }
 
+
+static void test_unset_bit(void** state) {
+    uint8_t bytes[] = {0xdf, 0xe6, 0x2f, 0x4d, 0xbb, 0xef, 0x45, 0xa1};
+    Bit bits[] = {BIT0, BIT1, BIT2, BIT3, BIT4, BIT5, BIT6, BIT7};
+    uint8_t expected[] = {0xde, 0xe4, 0x2b, 0x45, 0xab, 0xcf, 0x05, 0x21};
+
+    size_t size = sizeof(bytes)/sizeof(uint8_t);
+    for (int i = 0; i < size; i++) {
+        unset_bit(&bytes[i], bits[i]);
+        assert_true(bytes[i] == expected[i]);
+    }
+}
+
+static void test_ptr_offset(void** state) {
+    uint16_t greater_ptrs[] = {0x0001, 0xabcd, 0x1111, 0xa000};
+    uint16_t lesser_ptrs[] = {0x0001, 0x0abc, 0x0101, 0x9999};
+    uint16_t expected[] = {0x0000, 0xa111, 0x1010, 0x0667};
+
+    size_t size = sizeof(greater_ptrs)/sizeof(uint16_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(ptr_offset(greater_ptrs[i], lesser_ptrs[i]) == expected[i]);
+    }
+}
+
+static void test_ptr_in(void** state) {
+    uint16_t ptrs[] = {0x0001, 0x0001, 0x0001, 0xaaaa, 0xaaaa, 0xaaaa};
+    uint16_t high_addrs[] = {0x0001, 0x0001, 0xa000, 0xbbbb, 0x9999, 0xeeee};
+    uint16_t low_addrs[] = {0x0001, 0x0000, 0x0001, 0x9999, 0x8888, 0xdddd};
+    uint8_t expected[] = {1, 1, 1, 1, 0, 0};
+
+    size_t size = sizeof(ptrs)/sizeof(uint16_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(ptr_in(ptrs[i], low_addrs[i], high_addrs[i]) == expected[i]);
+    }
+}
+
+static void test_get_bit_number(void** state) {
+    Bit bits[] = {BIT0, BIT1, BIT2, BIT3, BIT4, BIT5, BIT6, BIT7, BIT8, BIT9, BIT10, BIT11, BIT12, BIT13, BIT14, BIT15};
+    uint8_t expected[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+
+    size_t size = sizeof(bits)/sizeof(Bit);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_bit_number(bits[i]) == expected[i]);
+    }
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_low_nibble),
@@ -84,6 +130,10 @@ int main(void) {
         cmocka_unit_test(test_merge_bytes),
         cmocka_unit_test(test_get_bit),
         cmocka_unit_test(test_set_bit),
+        cmocka_unit_test(test_unset_bit),
+        cmocka_unit_test(test_ptr_offset),
+        cmocka_unit_test(test_ptr_in),
+        cmocka_unit_test(test_get_bit_number),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
