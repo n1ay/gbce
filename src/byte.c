@@ -101,6 +101,26 @@ static void get_bits(uint16_t value, uint16_t* bits) {
     bits[15] = value & BIT15;
 }
 
+uint8_t get_8b_half_carry_bit(uint8_t value1, uint8_t value2) {
+    return (((value1 & 0x0f) + (value2 & 0x0f)) & 0x10) == 0x10;
+}
+
+uint8_t get_8b_carry_bit(uint8_t value1, uint8_t value2) {
+    return ((((uint16_t) value1) + ((uint16_t) value2)) & 0x0100) == 0x0100;
+}
+
+uint8_t get_16b_half_carry_bit(uint16_t value1, uint16_t value2) {
+    return (((value1 & 0x0fff) + (value2 & 0x0fff)) & 0x1000) == 0x1000;
+}
+
+uint8_t get_16b_carry_bit(uint16_t value1, uint16_t value2) {
+    return ((((uint32_t) value1) + ((uint32_t) value2)) & 0x10000) == 0x10000;
+}
+
+uint8_t get_8b_half_borrow_bit(uint16_t value1, uint16_t value2) {
+    return (value1 & 0x0f) < (value2 & 0x0f);
+}
+
 uint8_t add_get_carry_bit(uint16_t value1, uint16_t value2, Bit bit) {
     uint16_t value1_bits[16];
     uint16_t value2_bits[16];
