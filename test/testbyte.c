@@ -121,6 +121,62 @@ static void test_get_bit_number(void** state) {
     }
 }
 
+
+static void test_get_8b_half_carry_bit(void** state) {
+    uint8_t values1[] = {0xaa, 0xa2, 0xaa, 0xa2};
+    uint8_t values2[] = {0xbb, 0xbb, 0xb4, 0xb4};
+    uint8_t expected[] = {1, 0, 0, 0};
+
+    size_t size = sizeof(values1)/sizeof(uint8_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_8b_half_carry_bit(values1[i], values2[i]) == expected[i]);
+    }
+}
+
+static void test_get_8b_carry_bit(void** state) {
+    uint8_t values1[] = {0xaa, 0x2a, 0xaa, 0x2a};
+    uint8_t values2[] = {0xbb, 0xbb, 0x4b, 0x4b};
+    uint8_t expected[] = {1, 0, 0, 0};
+
+    size_t size = sizeof(values1)/sizeof(uint8_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_8b_carry_bit(values1[i], values2[i]) == expected[i]);
+    }
+}
+
+static void test_get_16b_half_carry_bit(void** state) {
+    uint16_t values1[] = {0xaa00, 0xa200, 0xaa00, 0xa200};
+    uint16_t values2[] = {0xbb00, 0xbb00, 0xb400, 0xb400};
+    uint8_t expected[] = {1, 0, 0, 0};
+
+    size_t size = sizeof(values1)/sizeof(uint16_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_16b_half_carry_bit(values1[i], values2[i]) == expected[i]);
+    }
+}
+
+static void test_get_16b_carry_bit(void** state) {
+    uint16_t values1[] = {0xaa00, 0x2a00, 0xaa00, 0x2a00};
+    uint16_t values2[] = {0xbb00, 0xbb00, 0x4b00, 0x4b00};
+    uint8_t expected[] = {1, 0, 0, 0};
+
+    size_t size = sizeof(values1)/sizeof(uint16_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_16b_carry_bit(values1[i], values2[i]) == expected[i]);
+    }
+}
+
+static void test_get_8b_half_borrow_bit(void** state) {
+    uint8_t minuends[] = {0xaa, 0xcc, 0xaa, 0x2a};
+    uint8_t subtrahends[] = {0xbb, 0xbb, 0x44, 0x4a};
+    uint8_t expected[] = {1, 0, 0, 0};
+
+    size_t size = sizeof(minuends)/sizeof(uint8_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_8b_half_borrow_bit(minuends[i], subtrahends[i]) == expected[i]);
+    }
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_low_nibble),
@@ -134,6 +190,11 @@ int main(void) {
         cmocka_unit_test(test_ptr_offset),
         cmocka_unit_test(test_ptr_in),
         cmocka_unit_test(test_get_bit_number),
+        cmocka_unit_test(test_get_8b_half_carry_bit),
+        cmocka_unit_test(test_get_8b_carry_bit),
+        cmocka_unit_test(test_get_16b_half_carry_bit),
+        cmocka_unit_test(test_get_16b_carry_bit),
+        cmocka_unit_test(test_get_8b_half_borrow_bit),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

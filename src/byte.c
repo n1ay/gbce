@@ -117,8 +117,8 @@ uint8_t get_16b_carry_bit(uint16_t value1, uint16_t value2) {
     return ((((uint32_t) value1) + ((uint32_t) value2)) & 0x10000) == 0x10000;
 }
 
-uint8_t get_8b_half_borrow_bit(uint16_t value1, uint16_t value2) {
-    return (value1 & 0x0f) < (value2 & 0x0f);
+uint8_t get_8b_half_borrow_bit(uint8_t minuend, uint8_t subtrahend) {
+    return (minuend & 0x0f) < (subtrahend & 0x0f);
 }
 
 uint8_t add_get_carry_bit(uint16_t value1, uint16_t value2, Bit bit) {
