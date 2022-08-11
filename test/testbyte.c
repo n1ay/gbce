@@ -177,6 +177,17 @@ static void test_get_8b_half_borrow_bit(void** state) {
     }
 }
 
+static void test_get_8b_borrow_bit(void** state) {
+    uint8_t minuends[] = {0xaa, 0xcc, 0xaa, 0x2a};
+    uint8_t subtrahends[] = {0xb0, 0xbd, 0x4d, 0x2a};
+    uint8_t expected[] = {1, 0, 0, 0};
+
+    size_t size = sizeof(minuends)/sizeof(uint8_t);
+    for (int i = 0; i < size; i++) {
+        assert_true(get_8b_borrow_bit(minuends[i], subtrahends[i]) == expected[i]);
+    }
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_low_nibble),
@@ -195,6 +206,7 @@ int main(void) {
         cmocka_unit_test(test_get_16b_half_carry_bit),
         cmocka_unit_test(test_get_16b_carry_bit),
         cmocka_unit_test(test_get_8b_half_borrow_bit),
+        cmocka_unit_test(test_get_8b_borrow_bit),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

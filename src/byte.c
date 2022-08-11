@@ -121,3 +121,7 @@ uint8_t get_8b_half_borrow_bit(uint8_t minuend, uint8_t subtrahend) {
     return (minuend & 0x0f) < (subtrahend & 0x0f);
 }
 
+uint8_t get_8b_borrow_bit(uint8_t minuend, uint8_t subtrahend) {
+    return ((uint8_t) minuend) < ((uint8_t) subtrahend);
+}
+

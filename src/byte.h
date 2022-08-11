@@ -38,4 +38,5 @@ uint8_t get_8b_carry_bit(uint8_t value1, uint8_t value2);
 uint8_t get_16b_half_carry_bit(uint16_t value1, uint16_t value2);
 uint8_t get_16b_carry_bit(uint16_t value1, uint16_t value2);
 uint8_t get_8b_half_borrow_bit(uint8_t minuend, uint8_t subtrahend);
+uint8_t get_8b_borrow_bit(uint8_t minuend, uint8_t subtrahend);
 #endif
