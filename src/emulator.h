@@ -29,4 +29,8 @@ void cmd_8bit_reg_add(Emulator* emulator, uint8_t* target_ptr, const uint8_t add
 void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t add_value);
 
 void cmd_8bit_reg_add_carry(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value);
+
+void cmd_8bit_reg_and(Emulator* emulator, uint8_t* target_ptr, const uint8_t value);
+
+void cmd_8bit_reg_xor(Emulator* emulator, uint8_t* target_ptr, const uint8_t value);
 #endif
