@@ -33,8 +33,6 @@ void unset_bit(uint8_t* byte_ptr, Bit bit);
 uint16_t ptr_offset(uint16_t greater_ptr, uint16_t lesser_ptr);
 uint8_t ptr_in(uint16_t ptr, uint16_t low_addr, uint16_t high_addr);
 uint8_t get_bit_number(Bit bit);
-uint8_t add_get_carry_bit(uint16_t value1, uint16_t value2, Bit bit);
-uint8_t subtract_get_borrow_bit(uint16_t value1, uint16_t value2, Bit bit);
 uint8_t get_8b_half_carry_bit(uint8_t value1, uint8_t value2);
 uint8_t get_8b_carry_bit(uint8_t value1, uint8_t value2);
 uint8_t get_16b_half_carry_bit(uint16_t value1, uint16_t value2);

@@ -1,4 +1,5 @@
 #include "emulator.h"
+#include "byte.h"
 
 void init_emulator(Emulator* emulator) {
     init_cpu(&emulator->cpu);
@@ -693,7 +694,7 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
 
 void cmd_8bit_inc(Emulator* emulator, uint8_t* register_ptr) {
     unset_flag(&emulator->cpu, FLAG_N);
-    if (add_get_carry_bit(*register_ptr, 0x01, BIT3)) {
+    if (get_8b_half_carry_bit(*register_ptr, 0x01)) {
         set_flag(&emulator->cpu, FLAG_H);
     }
     ++(*register_ptr);
@@ -704,7 +705,7 @@ void cmd_8bit_inc(Emulator* emulator, uint8_t* register_ptr) {
 
 void cmd_8bit_dec(Emulator* emulator, uint8_t* register_ptr) {
     set_flag(&emulator->cpu, FLAG_N);
-    if (!subtract_get_borrow_bit(*register_ptr, 0x01, BIT3)) {
+    if (!get_8b_half_borrow_bit(*register_ptr, 0x01)) {
         set_flag(&emulator->cpu, FLAG_H);
     }
     --(*register_ptr);
@@ -715,10 +716,10 @@ void cmd_8bit_dec(Emulator* emulator, uint8_t* register_ptr) {
 
 void cmd_8bit_reg_add(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value) {
     unset_flag(&emulator->cpu, FLAG_N);
-    if (add_get_carry_bit(*target_ptr, add_value, BIT3)) {
+    if (get_8b_half_carry_bit(*target_ptr, add_value)) {
         set_flag(&emulator->cpu, FLAG_H);
     }
-    if (add_get_carry_bit(*target_ptr, add_value, BIT7)) {
+    if (get_8b_carry_bit(*target_ptr, add_value)) {
         set_flag(&emulator->cpu, FLAG_C);
     }
     *target_ptr += add_value;
@@ -729,10 +730,10 @@ void cmd_8bit_reg_add(Emulator* emulator, uint8_t* target_ptr, const uint8_t add
 
 void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t add_value) {
     unset_flag(&emulator->cpu, FLAG_N);
-    if (add_get_carry_bit(*target_ptr, add_value, BIT11)) {
+    if (get_16b_half_carry_bit(*target_ptr, add_value)) {
         set_flag(&emulator->cpu, FLAG_H);
     }
-    if (add_get_carry_bit(*target_ptr, add_value, BIT15)) {
+    if (get_16b_carry_bit(*target_ptr, add_value)) {
         set_flag(&emulator->cpu, FLAG_C);
     }
     (*target_ptr) += add_value;
@@ -742,12 +743,10 @@ void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t 
 void cmd_8bit_reg_add_carry(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value) {
     uint8_t carry_bit = get_flag(emulator->cpu, FLAG_C);
     unset_flag(&emulator->cpu, FLAG_N);
-    if (add_get_carry_bit(*target_ptr, add_value, BIT3)
-            || add_get_carry_bit(*target_ptr + add_value, carry_bit, BIT3)) {
+    if (get_8b_half_carry_bit(*target_ptr, add_value)) {
         set_flag(&emulator->cpu, FLAG_H);
     }
-    if (add_get_carry_bit(*target_ptr, add_value, BIT7)
-            || add_get_carry_bit(*target_ptr + add_value, carry_bit, BIT7)) {
+    if (get_8b_carry_bit(*target_ptr, add_value)) {
         set_flag(&emulator->cpu, FLAG_C);
     }
     *target_ptr += add_value;

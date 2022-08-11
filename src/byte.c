@@ -121,23 +121,3 @@ uint8_t get_8b_half_borrow_bit(uint8_t minuend, uint8_t subtrahend) {
     return (minuend & 0x0f) < (subtrahend & 0x0f);
 }
 
-uint8_t add_get_carry_bit(uint16_t value1, uint16_t value2, Bit bit) {
-    uint16_t value1_bits[16];
-    uint16_t value2_bits[16];
-    get_bits(value1, value1_bits);
-    get_bits(value2, value2_bits);
-
-    // 17 bit carry to simplify logic for the 0 bit carry
-    uint8_t carried_bits[17] = {[0] = 0};
-
-    for (int i = 0; i < 16; i++) {
-        carried_bits[i + 1] = ((value1_bits[i] && value2_bits[i]) || (value1_bits[i] && carried_bits[i]) || (value2_bits[i] && carried_bits[i]));
-    }
-
-    return carried_bits[get_bit_number(bit) + 1];
-}
-
-uint8_t subtract_get_borrow_bit(uint16_t value1, uint16_t value2, Bit bit) {
-    uint16_t result = value1 - value2;
-    return add_get_carry_bit(value2, result, bit);
-}
