@@ -1,7 +1,5 @@
 #include "byte.h"
 
-static void get_bits(uint16_t value, uint16_t* bits);
-
 uint8_t low_nibble(uint8_t byte) {
     return byte & 0x0f;
 }
@@ -80,25 +78,6 @@ uint8_t get_bit_number(Bit bit) {
         default:
             return 0;
     }
-}
-
-static void get_bits(uint16_t value, uint16_t* bits) {
-    bits[0] = value & BIT0;
-    bits[1] = value & BIT1;
-    bits[2] = value & BIT2;
-    bits[3] = value & BIT3;
-    bits[4] = value & BIT4;
-    bits[5] = value & BIT5;
-    bits[6] = value & BIT6;
-    bits[7] = value & BIT7;
-    bits[8] = value & BIT8;
-    bits[9] = value & BIT9;
-    bits[10] = value & BIT10;
-    bits[11] = value & BIT11;
-    bits[12] = value & BIT12;
-    bits[13] = value & BIT13;
-    bits[14] = value & BIT14;
-    bits[15] = value & BIT15;
 }
 
 uint8_t get_8b_half_carry_bit(uint8_t value1, uint8_t value2) {

@@ -623,51 +623,67 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0x90: //SUB B
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.B);
             break;
 
         case 0x91: //SUB C
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.C);
             break;
 
         case 0x92: //SUB D
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.D);
             break;
 
         case 0x93: //SUB E
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.E);
             break;
 
         case 0x94: //SUB H
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.H);
             break;
 
         case 0x95: //SUB L
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.L);
             break;
 
         case 0x96: //SUB (HL)
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, *access_memory(emulator->memory, emulator->cpu.HL));
             break;
 
         case 0x97: //SUB A
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.A);
             break;
 
         case 0x98: //SBC A,B
+            cmd_8bit_reg_sub_carry(emulator, &emulator->cpu.A, emulator->cpu.B);
             break;
 
         case 0x99: //SBC A,C
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.C);
             break;
 
         case 0x9a: //SBC A,D
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.D);
             break;
 
         case 0x9b: //SBC A,E
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.E);
             break;
 
         case 0x9c: //SBC A,H
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.H);
             break;
 
         case 0x9d: //SBC A,L
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.L);
             break;
 
         case 0x9e: //SBC A,(HL)
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, *access_memory(emulator->memory, emulator->cpu.HL));
             break;
 
         case 0x9f: //SBC A,A
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, emulator->cpu.A);
             break;
 
         case 0xc6: //ADD A,n
@@ -714,6 +730,36 @@ void cmd_8bit_dec(Emulator* emulator, uint8_t* register_ptr) {
     }
 }
 
+void cmd_8bit_reg_sub(Emulator* emulator, uint8_t* target_ptr, const uint8_t sub_value) {
+    set_flag(&emulator->cpu, FLAG_N);
+    if (!get_8b_half_borrow_bit(*target_ptr, sub_value)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    if (!get_8b_borrow_bit(*target_ptr, sub_value)) {
+        set_flag(&emulator->cpu, FLAG_C);
+    }
+    *target_ptr -= sub_value;
+    if(!(*target_ptr)) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+}
+
+void cmd_8bit_reg_sub_carry(Emulator* emulator, uint8_t* target_ptr, const uint8_t sub_value) {
+    uint8_t carry_bit = get_flag(emulator->cpu, FLAG_C);
+    set_flag(&emulator->cpu, FLAG_N);
+    if (!get_8b_half_borrow_bit(*target_ptr, sub_value) || (carry_bit && !get_8b_half_borrow_bit(*target_ptr - sub_value, carry_bit))) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    if (!get_8b_borrow_bit(*target_ptr, sub_value) || (carry_bit && !get_8b_borrow_bit(*target_ptr - sub_value, carry_bit))) {
+        set_flag(&emulator->cpu, FLAG_C);
+    }
+    *target_ptr -= sub_value;
+    *target_ptr -= carry_bit;
+    if(!(*target_ptr)) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+}
+
 void cmd_8bit_reg_add(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value) {
     unset_flag(&emulator->cpu, FLAG_N);
     if (get_8b_half_carry_bit(*target_ptr, add_value)) {
@@ -743,10 +789,10 @@ void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t 
 void cmd_8bit_reg_add_carry(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value) {
     uint8_t carry_bit = get_flag(emulator->cpu, FLAG_C);
     unset_flag(&emulator->cpu, FLAG_N);
-    if (get_8b_half_carry_bit(*target_ptr, add_value)) {
+    if (get_8b_half_carry_bit(*target_ptr, add_value) || (carry_bit && get_8b_half_carry_bit(*target_ptr + add_value, carry_bit))) {
         set_flag(&emulator->cpu, FLAG_H);
     }
-    if (get_8b_carry_bit(*target_ptr, add_value)) {
+    if (get_8b_carry_bit(*target_ptr, add_value) || (carry_bit && get_8b_carry_bit(*target_ptr + add_value, carry_bit))) {
         set_flag(&emulator->cpu, FLAG_C);
     }
     *target_ptr += add_value;

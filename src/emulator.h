@@ -20,6 +20,10 @@ void cmd_8bit_inc(Emulator* emulator, uint8_t* register_ptr);
 
 void cmd_8bit_dec(Emulator* emulator, uint8_t* register_ptr);
 
+void cmd_8bit_reg_sub(Emulator* emulator, uint8_t* target_ptr, const uint8_t sub_value);
+
+void cmd_8bit_reg_sub_carry(Emulator* emulator, uint8_t* target_ptr, const uint8_t sub_value);
+
 void cmd_8bit_reg_add(Emulator* emulator, uint8_t* target_ptr, const uint8_t add_value);
 
 void cmd_16bit_reg_add(Emulator* emulator, uint16_t* target_ptr, const uint16_t add_value);
