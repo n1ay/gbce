@@ -33,4 +33,8 @@ void cmd_8bit_reg_add_carry(Emulator* emulator, uint8_t* target_ptr, const uint8
 void cmd_8bit_reg_and(Emulator* emulator, uint8_t* target_ptr, const uint8_t value);
 
 void cmd_8bit_reg_xor(Emulator* emulator, uint8_t* target_ptr, const uint8_t value);
+
+void cmd_8bit_reg_or(Emulator* emulator, uint8_t* target_ptr, const uint8_t value);
+
+void cmd_8bit_reg_cp(Emulator* emulator, const uint8_t target_ptr, const uint8_t value);
 #endif

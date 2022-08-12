@@ -80,6 +80,7 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0x10: //STOP
+            //TODO
             MOV_PC;
             break;
 
@@ -750,6 +751,70 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             cmd_8bit_reg_xor(emulator, &emulator->cpu.A, emulator->cpu.A);
             break;
 
+        case 0xb0: //OR B
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.B);
+            break;
+
+        case 0xb1: //OR C
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.C);
+            break;
+
+        case 0xb2: //OR D
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.D);
+            break;
+
+        case 0xb3: //OR E
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.E);
+            break;
+
+        case 0xb4: //OR H
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.H);
+            break;
+
+        case 0xb5: //OR L
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.L);
+            break;
+
+        case 0xb6: //OR (HL)
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, *access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0xb7: //OR A
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, emulator->cpu.A);
+            break;
+
+        case 0xb8: //CP B
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.B);
+            break;
+
+        case 0xb9: //CP C
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.C);
+            break;
+
+        case 0xba: //CP D
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.D);
+            break;
+
+        case 0xbb: //CP E
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.E);
+            break;
+
+        case 0xbc: //CP H
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.H);
+            break;
+
+        case 0xbd: //CP L
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.L);
+            break;
+
+        case 0xbe: //CP (HL)
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, *access_memory(emulator->memory, emulator->cpu.HL));
+            break;
+
+        case 0xbf: //CP A
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.A);
+            break;
+
         case 0xc6: //ADD A,n
             cmd_8bit_reg_add(emulator, &emulator->cpu.A, byte1);
             MOV_PC;
@@ -884,5 +949,28 @@ void cmd_8bit_reg_xor(Emulator* emulator, uint8_t* target_ptr, const uint8_t val
     unset_flag(&emulator->cpu, FLAG_N);
     unset_flag(&emulator->cpu, FLAG_H);
     unset_flag(&emulator->cpu, FLAG_C);
+}
+
+void cmd_8bit_reg_or(Emulator* emulator, uint8_t* target_ptr, const uint8_t value) {
+    *target_ptr = (*target_ptr | value);
+    if (!*target_ptr) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+    unset_flag(&emulator->cpu, FLAG_N);
+    unset_flag(&emulator->cpu, FLAG_H);
+    unset_flag(&emulator->cpu, FLAG_C);
+}
+
+void cmd_8bit_reg_cp(Emulator* emulator, const uint8_t target_ptr, const uint8_t value) {
+    if (target_ptr == value) {
+        set_flag(&emulator->cpu, FLAG_Z);
+    }
+    if (!get_8b_half_borrow_bit(target_ptr, value)) {
+        set_flag(&emulator->cpu, FLAG_H);
+    }
+    if (!get_8b_borrow_bit(target_ptr, value)) {
+        set_flag(&emulator->cpu, FLAG_C);
+    }
+    set_flag(&emulator->cpu, FLAG_N);
 }
 
