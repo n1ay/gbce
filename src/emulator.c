@@ -905,6 +905,80 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             //TODO
             break;
 
+        case 0xd0: //RET NC
+            if (!get_flag(emulator->cpu, FLAG_C)) {
+                cmd_return(emulator);
+            }
+            break;
+
+        case 0xd1: //POP DE
+            cmd_pop(emulator, &emulator->cpu.DE);
+            break;
+
+        case 0xd2: //JP NC,nn
+            MOV_PC2;
+            if (!get_flag(emulator->cpu, FLAG_C)) {
+                emulator->cpu.PC = merge_bytes(byte1, byte2);
+                is_jump = 1;
+            }
+            break;
+
+        case 0xd4: //CALL NC,nn
+            MOV_PC2;
+            if (!get_flag(emulator->cpu, FLAG_C)) {
+                cmd_call(emulator, merge_bytes(byte1, byte2));
+                is_jump = 1;
+            }
+            break;
+
+        case 0xd5: //PUSH DE
+            cmd_push(emulator, emulator->cpu.DE);
+            break;
+
+        case 0xd6: //SUB n
+            cmd_8bit_reg_sub(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xd7: //RST 10H
+            //TODO
+            break;
+
+        case 0xd8: //RET C
+            if (get_flag(emulator->cpu, FLAG_C)) {
+                cmd_return(emulator);
+            }
+            break;
+
+        case 0xd9: //RETI
+            //TODO
+            break;
+
+        case 0xda: //JP C,nn
+            MOV_PC2;
+            if (get_flag(emulator->cpu, FLAG_C)) {
+                emulator->cpu.PC = merge_bytes(byte1, byte2);
+                is_jump = 1;
+            }
+            break;
+
+        case 0xdc: //CALL C,nn
+            MOV_PC2;
+            if (get_flag(emulator->cpu, FLAG_C)) {
+                cmd_call(emulator, merge_bytes(byte1, byte2));
+                is_jump = 1;
+            }
+            break;
+
+        case 0xde: //SBC A,n
+            cmd_8bit_reg_sub_carry(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xdf: //RST 18H
+            //TODO
+            break;
+
         case 0xfa: //LD A,(nn)
             emulator->cpu.A = *(access_memory(emulator->memory, merge_bytes(byte1, byte2)));
             MOV_PC2;
