@@ -44,13 +44,20 @@ $(TESTEXEC): %: %.o $(wordlist 2,$(words $(OBJ)),$(OBJ))
 .PHONY: test_build
 .PHONY: test_run
 .PHONY: test
+.PHONY: all
+.PHONY: dummy
+
+# just a dummy target to suppress 'Nothing to be done' message
+dummy:
+	@:
 
 clean:
 	rm -rf main $(ODIR)/*.o $(TESTODIR)/* *~ $(IDIR)/*~ $(TESTIDIR)/*~
 
-format:
+format: dummy
 	$(shell sed -i 's/\s*$$//g' $(IDIR)/*)
 	$(shell sed -i 's/\s*$$//g' $(TESTIDIR)/*)
+	$(info Removing trailing whitespaces in source and test files)
 
 test_build: $(TESTEXEC)
 define log_and_run =
@@ -60,3 +67,5 @@ endef
 test_run:
 	$(foreach testfile,$(TESTEXEC),$(call log_and_run,$(testfile)))
 test: test_build test_run
+
+all: main test
