@@ -979,6 +979,56 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             //TODO
             break;
 
+        case 0xe0: //LDH (n),A
+            *access_memory(emulator->memory, 0xff00 + byte1) = emulator->cpu.A;
+            MOV_PC;
+            break;
+
+        case 0xe1: //POP HL
+            cmd_pop(emulator, &emulator->cpu.HL);
+            break;
+
+        case 0xe2: //LD (C),A
+            *access_memory(emulator->memory, 0xff00 + emulator->cpu.C) = emulator->cpu.A;
+            break;
+
+        case 0xe5: //PUSH HL
+            cmd_push(emulator, emulator->cpu.HL);
+            break;
+
+        case 0xe6: //AND n
+            cmd_8bit_reg_and(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xe7: //RST 20H
+            //TODO
+            break;
+
+        case 0xe8: //ADD SP,n
+            cmd_16bit_reg_add(emulator, &emulator->cpu.SP, byte1);
+            MOV_PC;
+            break;
+
+        case 0xe9: //JP (HL)
+            emulator->cpu.PC = emulator->cpu.HL;
+            is_jump = 1;
+            break;
+
+        case 0xea: //LD (nn),A
+            emulator->cpu.A = *access_memory(emulator->memory, merge_bytes(byte1, byte2));
+            MOV_PC2;
+            break;
+
+        case 0xee: //XOR n
+            cmd_8bit_reg_xor(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xef: //RST 28H
+            //TODO
+            break;
+
         case 0xfa: //LD A,(nn)
             emulator->cpu.A = *(access_memory(emulator->memory, merge_bytes(byte1, byte2)));
             MOV_PC2;
