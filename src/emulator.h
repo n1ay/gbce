@@ -37,4 +37,13 @@ void cmd_8bit_reg_xor(Emulator* emulator, uint8_t* target_ptr, const uint8_t val
 void cmd_8bit_reg_or(Emulator* emulator, uint8_t* target_ptr, const uint8_t value);
 
 void cmd_8bit_reg_cp(Emulator* emulator, const uint8_t target_ptr, const uint8_t value);
+
+void cmd_call(Emulator* emulator, const uint16_t jump_address);
+
+void cmd_return(Emulator* emulator);
+
+void cmd_push(Emulator* emulator, const uint16_t target_ptr);
+
+void cmd_pop(Emulator* emulator, uint16_t* target_ptr);
+
 #endif

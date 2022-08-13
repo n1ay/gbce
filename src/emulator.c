@@ -815,9 +815,94 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             cmd_8bit_reg_cp(emulator, emulator->cpu.A, emulator->cpu.A);
             break;
 
+        case 0xc0: //RET NZ
+            if (!get_flag(emulator->cpu, FLAG_Z)) {
+                cmd_return(emulator);
+            }
+            break;
+
+        case 0xc1: //POP BC
+            cmd_pop(emulator, &emulator->cpu.BC);
+            break;
+
+        case 0xc2: //JP NZ,nn
+            MOV_PC2;
+            if (!get_flag(emulator->cpu, FLAG_Z)) {
+                emulator->cpu.PC = merge_bytes(byte1, byte2);
+                is_jump = 1;
+            }
+            break;
+
+        case 0xc3: //JP nn
+            MOV_PC2;
+            emulator->cpu.PC = merge_bytes(byte1, byte2);
+            is_jump = 1;
+            break;
+
+        case 0xc4: //CALL NZ,nn
+            MOV_PC2;
+            if (!get_flag(emulator->cpu, FLAG_Z)) {
+                cmd_call(emulator, merge_bytes(byte1, byte2));
+                is_jump = 1;
+            }
+            break;
+
+        case 0xc5: //PUSH BC
+            cmd_push(emulator, emulator->cpu.BC);
+            break;
+
         case 0xc6: //ADD A,n
             cmd_8bit_reg_add(emulator, &emulator->cpu.A, byte1);
             MOV_PC;
+            break;
+
+        case 0xc7: //RST 00H
+            //TODO
+            break;
+
+        case 0xc8: //RET Z
+            if (get_flag(emulator->cpu, FLAG_Z)) {
+                cmd_return(emulator);
+            }
+            break;
+
+        case 0xc9: //RET
+            cmd_return(emulator);
+            break;
+
+        case 0xca: //JP Z,nn
+            MOV_PC2;
+            if (get_flag(emulator->cpu, FLAG_Z)) {
+                emulator->cpu.PC = merge_bytes(byte1, byte2);
+                is_jump = 1;
+            }
+            break;
+
+        case 0xcb: //0xcb prefix
+            //TODO
+            break;
+
+        case 0xcc: //CALL Z,nn
+            MOV_PC2;
+            if (get_flag(emulator->cpu, FLAG_Z)) {
+                cmd_call(emulator, merge_bytes(byte1, byte2));
+                is_jump = 1;
+            }
+            break;
+
+        case 0xcd: //CALL nn
+            MOV_PC2;
+            cmd_call(emulator, merge_bytes(byte1, byte2));
+            is_jump = 1;
+            break;
+
+        case 0xce: //ADC A,n
+            cmd_8bit_reg_add_carry(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xcf: //RST 08H
+            //TODO
             break;
 
         case 0xfa: //LD A,(nn)
@@ -830,9 +915,7 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
     }
 
-    if (is_jump) {
-        return;
-    } else {
+    if (!is_jump) {
         MOV_PC;
     }
 }
@@ -972,5 +1055,24 @@ void cmd_8bit_reg_cp(Emulator* emulator, const uint8_t target_ptr, const uint8_t
         set_flag(&emulator->cpu, FLAG_C);
     }
     set_flag(&emulator->cpu, FLAG_N);
+}
+
+void cmd_call(Emulator* emulator, const uint16_t jump_address) {
+    cmd_push(emulator, emulator->cpu.PC);
+    emulator->cpu.PC = jump_address;
+}
+
+void cmd_return(Emulator* emulator) {
+    cmd_pop(emulator, &emulator->cpu.PC);
+}
+
+void cmd_pop(Emulator* emulator, uint16_t* target_ptr) {
+    *target_ptr = *access_memory(emulator->memory, emulator->cpu.SP);
+    emulator->cpu.SP += 2;
+}
+
+void cmd_push(Emulator* emulator, const uint16_t target_ptr) {
+    emulator->cpu.SP -= 2;
+    *access_memory(emulator->memory, emulator->cpu.SP) = target_ptr;
 }
 
