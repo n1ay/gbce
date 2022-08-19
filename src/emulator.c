@@ -1016,7 +1016,7 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             break;
 
         case 0xea: //LD (nn),A
-            emulator->cpu.A = *access_memory(emulator->memory, merge_bytes(byte1, byte2));
+            *access_memory(emulator->memory, merge_bytes(byte1, byte2)) = emulator->cpu.A;
             MOV_PC2;
             break;
 
@@ -1029,9 +1029,62 @@ void emulate_op_code(uint8_t* program, Emulator* emulator) {
             //TODO
             break;
 
+        case 0xf0: //LDH A,(n)
+            emulator->cpu.A = *access_memory(emulator->memory, 0xff00 + byte1);
+            MOV_PC;
+            break;
+
+        case 0xf1: //POP AF
+            cmd_pop(emulator, &emulator->cpu.AF);
+            break;
+
+        case 0xf2: //LD A,(C)
+            emulator->cpu.A = *access_memory(emulator->memory, 0xff00 + emulator->cpu.C);
+            break;
+
+        case 0xf3: //DI
+            //TODO
+            break;
+
+        case 0xf5: //PUSH AF
+            cmd_push(emulator, emulator->cpu.AF);
+            break;
+
+        case 0xf6: //OR n
+            cmd_8bit_reg_or(emulator, &emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xf7: //RST 30H
+            //TODO
+            break;
+
+        case 0xf8: //LDHL SP,n
+            emulator->cpu.HL = emulator->cpu.SP + byte1;
+            MOV_PC;
+            break;
+
+        case 0xf9: //LD SP,HL
+            emulator->cpu.SP = emulator->cpu.HL;
+            is_jump = 1;
+            break;
+
         case 0xfa: //LD A,(nn)
-            emulator->cpu.A = *(access_memory(emulator->memory, merge_bytes(byte1, byte2)));
+            emulator->cpu.A = *access_memory(emulator->memory, merge_bytes(byte1, byte2));
             MOV_PC2;
+            break;
+
+        case 0xfb: //EI
+            //TODO
+            break;
+
+        case 0xfe: //CP n
+            cmd_8bit_reg_cp(emulator, emulator->cpu.A, byte1);
+            MOV_PC;
+            break;
+
+        case 0xff: //RST 38H
+            //TODO
             break;
 
         default:
